@@ -14,37 +14,45 @@ def game_structure(line):
     return None
 
 
-file = open("2023/02/input.txt", "r")
+def process_file(file_path):
+    game_data_dict = {}
 
-my_dict = {}
-colour_dict = {}
-invalid_games = {}
-sum_of_game_numbers = 0
-inverse_result = 0
-result = 0
+    with open(file_path, "r") as file:
+        for line in file:
+            game_data = game_structure(line)
+            if game_data:
+                game_data_dict.update(game_data)
 
-for line in file:
-    game_data = game_structure(line)
-    if game_data:
-        my_dict.update(game_data)
+    file.close()
+    return game_data_dict
 
-file.close()
 
-for game_number, cube_list in my_dict.items():
-    for i in cube_list:
-        value, colour = i.split()
-        if (
-            (colour == "red" and int(value) > 12)
-            or (colour == "green" and int(value) > 13)
-            or (colour == "blue" and int(value) > 14)
-        ):
-            invalid_games[game_number] = True
+def main():
+    invalid_games = {}
+    sum_of_game_numbers = 0
+    inverse_result = 0
 
-for game_number in invalid_games.keys():
-    inverse_result += game_number
+    game_dict = process_file("2023/02/input.txt")
 
-for game_number in my_dict.keys():
-    sum_of_game_numbers += game_number
+    for game_number, cube_list in game_dict.items():
+        for i in cube_list:
+            value, colour = i.split()
+            if (
+                (colour == "red" and int(value) > 12)
+                or (colour == "green" and int(value) > 13)
+                or (colour == "blue" and int(value) > 14)
+            ):
+                invalid_games[game_number] = True
 
-result = sum_of_game_numbers - inverse_result
-print(result)  # Correct answer: 2716
+    for game_number in invalid_games.keys():
+        inverse_result += game_number
+
+    for game_number in game_dict.keys():
+        sum_of_game_numbers += game_number
+
+    result = sum_of_game_numbers - inverse_result
+    print(result)  # Correct answer: 2716
+
+
+if __name__ == "__main__":
+    main()
